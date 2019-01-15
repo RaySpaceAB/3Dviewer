@@ -1,0 +1,29 @@
+{
+  "name": "AngularHammer",
+  "version": "2.2-jsdw",
+  "authors": [
+    "Ryan S Mullins <ryan@ryanmullins.org>",
+    "James Wilson <me@unbui.lt>"
+  ],
+  "homepage": "https://github.com/jsdw/angular-hammer",
+  "main": "angular.hammer.js",
+  "license": "MIT",
+  "keywords": [
+    "Angular",
+    "Hammer",
+    "touch",
+    "javascript",
+    "gesture"
+  ],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "components",
+    "examples"
+  ],
+  "dependencies": {
+    "angular": ">=1.2.0",
+    "hammerjs": ">=2.0.0"
+  }
+}
