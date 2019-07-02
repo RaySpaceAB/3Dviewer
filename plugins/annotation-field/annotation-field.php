@@ -5,15 +5,21 @@ Description: Adds custom fields to the post content to adjust model/annotation v
 Author: Ray Space AB
 Version: 1.0
 License: GPL2
+// https://metabox.io/how-to-create-custom-meta-boxes-custom-fields-in-wordpress/
 */
 
-wp_enqueue_script( 'script', '/wp-content/plugins/annotation-field/assets/js/script.js', array( 'jquery' ), false, true );
+
 /**
  * Register meta boxes.
  */
 function af_register_meta_boxes() {
-    add_meta_box( 'af-1', __( 'Annotations', 'af' ), 'af_display_callback', 'post' );
+    wp_enqueue_script('sortablejs', get_template_directory_uri() .'/node_modules/sortablejs/Sortable.min.js');
+    wp_enqueue_script( 'repeater', '/wp-content/plugins/annotation-field/assets/js/script.js', array( 'jquery' ), 2019, true );
+    wp_enqueue_style( 'css', '/wp-content/plugins/annotation-field/style.css',false,'1.1','all');
+    
+    add_meta_box( 'af-1', __( 'Global settings', 'af' ), 'af_display_callback', 'post' );
 }
+
 add_action( 'add_meta_boxes', 'af_register_meta_boxes' );
 
 /**
@@ -31,6 +37,22 @@ function debug_to_console( $data ) {
         $output = implode( ',', $output);
 
     echo "<script>console.log( 'Debug Objects: " . $output . "' );</script>";
+}
+
+function update_field_global($post_id, $meta_key, $meta_value){
+    $latest = new WP_Query( array (
+        'orderby'   => 'rand',
+        'fields' => 'ids'
+    ));
+
+    //echo("<script>console.log('PHP: ');</script>");                 
+    add_post_meta($post_id, $meta_key, $meta_value);
+
+    // updat all posts
+    foreach ($latest->posts as $id) {
+        delete_post_meta($id, $meta_key);
+        add_post_meta($id, $meta_key, $meta_value);
+    }
 }
 
 /**
@@ -53,126 +75,60 @@ function af_save_meta_box( $post_id ) {
         'camera_target',
         'animation_time',
         'reset_time',
-        'max_distance',
-        'min_distance',
-        'spin_velocity'
+        'spin_velocity',
+        'swe_help_text',
+        'eng_help_text',
+        'swe_help_heading',
+        'eng_help_heading',
+        'eng_model_title',
+        'reset_model_time',
+        'menu_scale',
+        'textbox_scale',
+        'orbit_pan_factor',
+        'orbit_rotation_factor',
+        'orbit_zoom_factor',
+        'log_camera'
+
     ]; 
 
     foreach ( $meta_keys as $meta_key ) {
         delete_post_meta($post_id, $meta_key);
     }
 
-    register_meta( 'post', 'meta', [
-                        'show_in_rest' => true,
-                    ] );
-    register_post_type('meta',array('show_in_rest'=> true));
-    register_api_field( 'post',
-        'meta',
-        array(
-            'get_callback'    => '$meta_value',
-            'update_callback' => null, // add callback here for POST/PUT requests to update user meta
-            'schema'          => null,
-        )
-    );
+    // to show the fields params in JSON
+    // so it can be exported
+    register_meta( 'post', 'meta', ['show_in_rest' => true,]);
 
+    //we must loop through $meta_keys becasue if we import posts $_POST is empty
     foreach ( $meta_keys as $meta_key ) {
+        // if $_POST contains $meta_key we performed a update otherwise we created a new post
+        // and the we dont want to update our fields 
         if ( array_key_exists( $meta_key, $_POST ) ) {
-            foreach ($_POST[$meta_key] as $meta_value) {
-                $meta = get_post_meta($post_id, $meta_key);
+            // $_POST[$meta_key] is an array with one element becaus we are sending all inputs as arrays (name = manu_scale[])
+            if(is_array($_POST[$meta_key])){
+                // local settings 
+                foreach ($_POST[$meta_key] as $meta_value) {
 
-                $cam_position_array = Array();
-                $cam_target_array = Array();
-                if ( in_array($meta_value, $meta) ) {
-                    if($meta_key === "camera_position"){
+                    $cam_array = Array();
 
-                        $meta_value = serialize($meta_value);
-                    }
-                   
-                    update_post_meta( $post_id, $meta_key, sanitize_text_field( $meta_value ) );
-                }else{
+                    if($meta_key === "camera_position" || $meta_key === "camera_target"){
+                        array_push($cam_array, (float)$meta_value[x]);
+                        array_push($cam_array, (float)$meta_value[y]);
+                        array_push($cam_array, (float)$meta_value[z]);
 
-                    if($meta_key === "camera_position"){
-
-
-                        $coolArray = Array("tja" => 55);
-
-                        array_push($cam_position_array, (float)$meta_value[x]);
-                        array_push($cam_position_array, (float)$meta_value[y]);
-                        array_push($cam_position_array, (float)$meta_value[z]);
-
-                        $coolArray[] = $cam_position_array;
-                        $escaped_json = '{"key":"value with \\"escaped quotes\\""}';
-
-                        add_post_meta($post_id, $meta_key, json_encode($cam_position_array));
-                    }
-                    else if($meta_key === "camera_target"){
-
-                        array_push($cam_target_array, (float)$meta_value[x]);
-                        array_push($cam_target_array, (float)$meta_value[y]);
-                        array_push($cam_target_array, (float)$meta_value[z]);
-
-                        
-                        add_post_meta($post_id, $meta_key, json_encode($cam_target_array));
-                    }
-                    else if($meta_key === "animation_time"){
-
-                        $latest = new WP_Query( array (
-                            'orderby'   => 'rand',
-                            'fields' => 'ids'
-                        ));
-                        
-                        add_post_meta($post_id, $meta_key, json_encode((float)$meta_value));
-
-                        foreach ($latest->posts as $id) {
-                            delete_post_meta($id, $meta_key);
-                            add_post_meta($id, $meta_key, json_encode((float)$meta_value));
-                        }
-                        //echo "<script>console.log( 'Debug Objects: " . $output . "' );</script>";
-                    }
-                    else if($meta_key === "spin_velocity"){
-
-                        $latest = new WP_Query( array (
-                            'orderby'   => 'rand',
-                            'fields' => 'ids'
-                        ));
-                        
-                        add_post_meta($post_id, $meta_key, json_encode((float)$meta_value));
-
-                        foreach ($latest->posts as $id) {
-                            delete_post_meta($id, $meta_key);
-                            add_post_meta($id, $meta_key, json_encode((float)$meta_value));
-                        }
-                        //echo "<script>console.log( 'Debug Objects: " . $output . "' );</script>";
-                    }
-                    else if($meta_key === "reset_time"){
-
-                        $latest = new WP_Query( array (
-                            'orderby'   => 'rand',
-                            'fields' => 'ids'
-                        ));
-                        
-                        add_post_meta($post_id, $meta_key, json_encode((float)$meta_value));
-
-                        foreach ($latest->posts as $id) {
-                            delete_post_meta($id, $meta_key);
-                            add_post_meta($id, $meta_key, json_encode((float)$meta_value));
-                        }
-                    }
-                    else if($meta_key === "min_distance"){
-
-                        add_post_meta($post_id, $meta_key, json_encode((float)$meta_value));
-
-                    }
-                    else if($meta_key === "max_distance"){
-
-                        add_post_meta($post_id, $meta_key, json_encode((float)$meta_value));
-
-                    }
+                        add_post_meta($post_id, $meta_key, json_encode($cam_array));
+                    }                                    
                     else{
-                        add_post_meta($post_id, $meta_key, sanitize_text_field($meta_value));
+                        // for all inputs that is used for a singel post and is text
+                        add_post_meta($post_id, $meta_key, $meta_value);
                     }
                 }
             }
+            else{
+                //global settings
+                //everything is posted as text/string now
+                update_field_global($post_id, $meta_key, $_POST[$meta_key]);
+            } 
         }
     }
 }

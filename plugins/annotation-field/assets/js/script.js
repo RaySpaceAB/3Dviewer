@@ -1,60 +1,70 @@
-jQuery(function( $){
-	//----------------------------------------
-	// TYPE: Repeater
-	//----------------------------------------
+//----------------------------------------
+// TYPE: Annotation Repeater
+//----------------------------------------
 
-	var verifyItemsRepeater = function() {
-		var removeRow = $( '.repeater .remove-row' );
-		if ( $( '.repeater > .item' ).length == 1 ) {
+jQuery(document).ready(function(){
+
+
+	Sortable.create(simpleList, {
+        handle: ".handle",
+        animation: 100 
+    });
+
+	var showRemovButton = function() {
+		var removeRow = $( '.list-group .remove-row' );
+		if ( $( '.list-group-item' ).length == 1 ) {
 			removeRow.hide();
 		} else {
 			removeRow.show();
 		}
 	};
 
-	verifyItemsRepeater();
+	showRemovButton();
 
-	$( '.repeater > .add-row' ).click( function() {
-		var clone = $( '.repeater > .item:last' ).clone();
+	$( '.add-row' ).click( function() {
+
+		var clone = $( '.list-group-item:last' ).clone();
 		clone.find( 'input' ).val( '' );
 
-		clone[0].children[0].children[1].value = 0;
-		clone[0].children[0].children[2].value = 0;
-		clone[0].children[0].children[3].value = 0;
+		console.log("log1: ");
+		
+		clone.find('input' )[0].value = 0;
+		clone.find('input' )[1].value = 0;
+		clone.find('input' )[2].value = 0;
 
-		clone[0].children[1].children[1].value = 0;
-		clone[0].children[1].children[2].value = 0;
-		clone[0].children[1].children[3].value = 0;
+		clone.find('input' )[3].value = 0;
+		clone.find('input' )[4].value = 0;
+		clone.find('input' )[5].value = 0;
 
-		clone[0].getElementsByTagName("textarea")[0].value = "empty";
-		clone[0].getElementsByTagName("textarea")[1].value = "empty";
-		clone[0].children[2].children[0].children[0].children[1].value = "empty";
-		clone[0].children[2].children[1].children[0].children[1].value = "empty";
+		clone.find('#eng-title' )[0].value = "empty";
+		clone.find('#swe-title' )[0].value = "empty";
+		
+		clone.find("textarea")[0].value = "empty";
+		clone.find("textarea")[1].value = "empty";
 
-		clone[0].children[2].children[0].children[1].children[1].value = "empty";
-		clone[0].children[2].children[0].children[1].children[1].value = "empty";
 
-		$( clone ).insertBefore( $( this ) );
-		var newIndex = $( '.repeater > .item' ).length - 1;
+		$( clone ).insertAfter( $( '.list-group-item:last' ) );
+		var newIndex = $( '.list-group-item' ).length - 1;
 
-		$( '.repeater > .item:last [name]' ).attr( 'name', function( index, name ) {
+		//reindexing when new annotation is added
+		$( '.list-group-item:last [name]' ).attr( 'name', function( index, name ) {
 			return name.replace( /\d+/g, newIndex );
 		} );
 
-		verifyItemsRepeater();
+		showRemovButton();
 		return false;
 	} );
 
-	$( document ).on( 'click', '.repeater .remove-row', function() {
-		var item = $( '.repeater > .item' );
-		console.log("item: ", item.lenth);
-		if ( item.length == 1 ) {
-			item.find( 'input' ).val( '' );
-		} else {
-			$( this ).closest( '.item' ).remove();
-		}
-		verifyItemsRepeater();
+	$( document ).on( 'click', '.remove-row', function() {
+		// .on because we have multiple .remove-row classes
+
+		$( this ).closest( '.list-group-item' ).remove();
+		
+		showRemovButton();
 		return false;
 	} );
 
-} );
+
+});
+
+

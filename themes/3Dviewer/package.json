@@ -1,0 +1,26 @@
+{
+  "name": "3Dviewer",
+  "version": "3.0.0",
+  "description": "wordpress package",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "author": "\"\"",
+  "license": "ISC",
+  "dependencies": {
+    "@sketchfab/viewer-api": "^1.5.1",
+    "angular": "^1.6.9",
+    "angular-animate": "^1.6.9",
+    "angular-hammer": "^2.2.0",
+    "angular-route": "^1.6.9",
+    "angular-sanitize": "^1.6.9",
+    "chromedriver": "^74.0.0",
+    "jquery": "^3.3.1",
+    "protractor-browser-logs": "^1.0.430",
+    "protractor-console-plugin": "^0.1.1",
+    "sortablejs": "^1.9.0",
+    "sprintf-js": "^1.1.2"
+  },
+  "devDependencies": {}
+}

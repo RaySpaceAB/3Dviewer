@@ -133,7 +133,7 @@ add_action( 'rest_api_init', 'rest_register_settings', 0 );
 add_action( 'rest_api_init', 'create_initial_rest_routes', 0 );
 add_action( 'rest_api_init', 'create_api_posts_meta_field' );
 
-// adding meta data 
+// adding a meta field to the post like:  self.data.posts[i].post_meta_fields
 function create_api_posts_meta_field() {
  
 	// register_rest_field ( 'name-of-post-type', 'name-of-field-to-return', array-of-callbacks-and-schema() )
@@ -144,26 +144,93 @@ function create_api_posts_meta_field() {
 		)
 	);
 
-
 	$args = array(
-        'sanitize_callback' => 'sanitize_my_meta_key',
-        'auth_callback' => 'authorize_my_meta_key',
-        'type' => 'string',
-        'description' => 'My registered meta key',
-        'single' => true,
-        'show_in_rest' => true,
-    );
-    register_meta( 'post', 'my_meta_key', $args );
+            'type' => 'float',
+            'single' => true,
+            'object_subtype' => 'float',
+            'show_in_rest' => true,
+        );
+
+	// register_meta('post', 'post_meta_fields', [
+	//     'object_subtype' => 'animation_time', // Limit to a post type.
+	//     'type'           => 'number',
+	//     'description'    => 'Cidade',
+	//     'single'         => true,
+	//     'show_in_rest'   => true,
+	// ]);
+
+
+ //    register_post_type('post_meta_fields', [
+ //         'supports' => [
+ //             'custom-fields'
+ //         ],
+ //    ]);
+
+	// $args = array(
+ //        'sanitize_callback' => 'sanitize_my_meta_key',
+ //        'auth_callback' => 'authorize_my_meta_key',
+ //        'type' => 'string',
+ //        'description' => 'My registered meta key',
+ //        'single' => true,
+ //        'show_in_rest' => true,
+ //    );
+ //    register_meta( 'post', 'my_meta_key', $args );
 }
 
+function get_meta_values( $key = '', $type = 'post', $status = 'publish' ) {
+
+    global $wpdb;
+
+    if( empty( $key ) )
+        return;
+
+    $r = $wpdb->get_col( $wpdb->prepare( "
+        SELECT pm.meta_value FROM {$wpdb->postmeta} pm
+        LEFT JOIN {$wpdb->posts} p ON p.ID = pm.post_id
+        WHERE pm.meta_key = %s 
+        AND p.post_status = %s 
+        AND p.post_type = %s
+    ", $key, $status, $type ) );
+
+    return $r;
+}
 
  
 function get_post_meta_for_api( $object ) {
  //get the id of the post object array
  $post_id = $object['id'];
- 
- //return the post meta
- return get_post_meta( $post_id );
+
+ //get_post_meta return the post meta fields as an array with strings by default
+ // so we convert the contents
+ $metaData = get_post_meta( $post_id  );
+
+ foreach ($metaData as $key  => $value) {
+ 	// covert singel number to float
+ 	if(is_numeric($value[0])){
+ 		$metaData[$key] = (float)$value[0];
+ 	}
+ 	// array with arrays
+ 	elseif ( is_array(json_decode($value[0])) ) {
+ 		$index = 0;
+ 		foreach ($value as $element) {
+ 			$metaData[$key][$index++] = json_decode($element);
+ 		}
+ 	}
+ 	//array with strings
+ 	elseif(sizeof($value) > 1){
+ 		$metaData[$key] = $value;
+ 	}
+ 	//array with boolean 
+ 	elseif ($value[0] === "true" || $value[0] === "false") {
+ 		$metaData[$key] = json_decode($value[0]);
+ 	}
+ 	// single strings
+ 	else{
+ 		$metaData[$key] = $value[0];
+ 	}
+ }
+
+ return $metaData;
 }
 
 /**
