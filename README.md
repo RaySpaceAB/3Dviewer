@@ -1,31 +1,23 @@
-![Alt text](20190619_151103_4.gif?raw=true "Title")
+![Alt text](gif_animation.gif?raw=true "Title")
 
-# MultiViewer
+# 3DViewer
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.2.1.
+This wordpress theme was written in AngularJS and uses the Skethfab API as a service class.
 
-## Development server
-1. Start with installing node modules by running `npm install`
-2. Navigate to `./websocet-server` and run  `node main.js` to start the websocket server.
-3. Run `ng serve --host 0.0.0.0` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
-4. Find your your local ip adress with by running `ipconfig` in cmd and use this adress followed with `:4200` to run the app on your tablet
-
-## Code scaffolding
-
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
-
-## Build
-
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+## Run from localhost
+1. Start the Apache and mySQL server with XAMPP or any server application.
+2. Log in to `http:/localhost/phpmyadmin` and create a ne database with name `3dviewer`.
+3. Download the lates worpress version from [Wordpress.com](https://wordpress.org/download/) unzip it, copy the wordpress folder to `C:\xampp\htdocs`.
+4. Navigate to `localhost/3dviewer` in you browser and configure the wordpress settings, choose 3dviewer as database as you newly created.
+5. Copy `3Dviewer` folder from the downloaded repository to the `wp-content/themes`.
+6. Navigate to `wp-content/themes/3Dviewer` from cmd and run `npm install`
+7. Copy the plugin folders and paste them into `wp-content/plugins`. Don't forget to activate them in worpress panel.
+8. Import the test_data.xml from wordpress via tools>import>run importer>select file and submit.
+9. Open the first post an hitd the update buttom in the right corner
+10. Refresh the webpage `localhost/3dviewer` an the 3dviewer app will start running.
 
 ## Running end-to-end tests
+Run `protractor conf` from the test folder via [Protractor](http://www.protractortest.org/).
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
 
-## Further help
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
