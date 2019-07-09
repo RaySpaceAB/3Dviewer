@@ -2,7 +2,7 @@ var sprintf=require("sprintf-js").sprintf;
 
 describe('angularjs Demo App', function() {
     var logs;
-    browser.get('http://localhost/3dviewer');
+    browser.get('http://lrkbas3d.livrustkammaren.se');
     beforeEach(function () {
         
         logs = require('protractor-browser-logs')(browser);

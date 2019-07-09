@@ -1,0 +1,69 @@
+<div id="main-content" ng-cloak>
+	<div class=menu hm-tap="$ctrl.showMenu()" id=modelMenu>
+		<ul>
+			<li ng-repeat="post in $ctrl.posts track by $index"  > 
+				<img hm-tap="$ctrl.scrollTo($index); $ctrl.select($index);" ng-src="{{$ctrl.homeURL}}/wp-content/uploads/{{post.slug}}.png" alt="Description" >
+    		</li>
+			<li hm-tap="$ctrl.resetCam(true)"><img style="width: 80%; margin: 10% auto 10% auto;" src="{{$ctrl.homeURL}}/wp-content/uploads/reset.png" alt=""></li>
+			<li class="infoButton">
+				<div class="label" hm-tap="$ctrl._showAnnotationBox(1)">i</div>
+			</li>
+			<li class="infoButton">
+				<div class="label" hm-tap="$ctrl._showAnnotationBox(2)">?</div>
+			</li>
+	    </ul>
+	</div>
+
+	<div class="wrapper help" ng-show="$ctrl.showHelpBox">
+		<div class=text-box hm-tap="$event.stopPropagation()">
+			<h2>{{$ctrl.helpHeading}}</h2>
+			<p class="white-space-pre-line">{{$ctrl.helpText}}</p>
+			<ul class="language-list" >
+				<li ng-repeat="language in $ctrl.languages" 
+					hm-tap="$ctrl.changeLanguage($index)" 
+					ng-class="{ 'selected-language': $index == $ctrl.selectedLanguage }">{{language}}<span ng-if="$index == 0" style="text-decoration: none;">&nbsp/&nbsp</span>
+				</li>
+			</ul>
+		</div>
+		<div class=text-box-panel>
+			<ul >
+				<li class="middle-cross">
+					<img  hm-tap="$ctrl._showAnnotationBox(3)" ng-src="{{$ctrl.homeURL}}/wp-content/uploads/cross_middle.png" alt="Description">
+				</li>
+			</ul>
+		</div>
+	</div>
+	
+	<div class="wrapper" ng-show="$ctrl.showAnnotationBox">
+		<div class=text-box hm-tap="$event.stopPropagation()">
+			<h2>{{$ctrl.currentTitle}}</h2>
+			<p class="white-space-pre-line">{{$ctrl.currentDescription}}</p>
+			<ul class="language-list" >
+				<li ng-repeat="language in $ctrl.languages" 
+					hm-tap="$ctrl.changeLanguage($index)" 
+					ng-class="{ 'selected-language': $index == $ctrl.selectedLanguage }">{{language}}<span ng-if="$index == 0" style="text-decoration: none;">&nbsp/&nbsp</span>
+				</li>
+			</ul>
+		</div>
+		<div class=text-box-panel>
+			<ul>
+				<li class="arrow-left">
+					<img  hm-tap="$ctrl.prevAnnotation()" ng-src="{{$ctrl.homeURL}}/wp-content/uploads/arrow_right.png" alt="Description">
+				</li>
+				<li class="middle-cross">
+					<img  hm-tap="$ctrl._showAnnotationBox(3)" ng-src="{{$ctrl.homeURL}}/wp-content/uploads/cross_middle.png" alt="Description">
+				</li>
+				<li class="arrow-right">
+					<img  hm-tap="$ctrl.nextAnnotation()" ng-src="{{$ctrl.homeURL}}/wp-content/uploads/arrow_right.png" alt="Description">
+				</li>	
+			</ul>
+		</div>
+	</div>
+
+
+	<ul class="viewer" id="viewer">
+		<li data-ng-repeat="(modelIndex,post) in $ctrl.posts" >
+    		<div id="{{modelIndex}}" class="wp-post" ng-bind-html="post.content.rendered | unsafe" ></div>
+    	</li>
+	</ul>
+</div>

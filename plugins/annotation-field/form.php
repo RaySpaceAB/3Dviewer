@@ -235,8 +235,8 @@
 
     <div class="form-group" style="display: inline-block"> 
         <label>Log camera position</label>
-        <input type="hidden" name="log_camera" value="false" >
-        <input type="checkbox" name="log_camera" value="true" <?php if($log_camera) { echo 'checked';}?> >
+        <input type="hidden" name="log_camera" value="<?=false?>" >
+        <input type="checkbox" name="log_camera" value="<?=true?>" <?php if($log_camera) { echo 'checked';}?> >
         <p style="float: right; margin:0px; padding-top: 5px"> Induces memory leaks (only for finding annotation positions)</p>
     </div>
 
