@@ -2,7 +2,7 @@
 
 # 3DViewer
 
-This wordpress theme is written in AngularJS and uses the Skethfab API in a service class.
+This wordpress theme is written in AngularJS and uses the Skethfab API in a service class. A working demo is available at http://shmdemo.se
 
 ## Run from localhost
 1. Start Apache and mySQL server with XAMPP or any server application.
