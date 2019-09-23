@@ -1,0 +1,12 @@
+.handle {
+  cursor: move;
+  cursor: -webkit-grabbing;
+}
+
+.cross-arrow{
+  position: absolute;
+    right: 0;
+    transform: translate(-100%,0%);
+    display: inline-table;
+}
+    
