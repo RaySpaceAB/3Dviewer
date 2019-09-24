@@ -15,7 +15,7 @@
 	    wp_enqueue_script( 'repeater', '/wp-content/plugins/annotation-fields/assets/js/script.js', array( 'jquery' ), 2019, true );
 	    wp_enqueue_style( 'css', '/wp-content/plugins/annotation-fields/style.css',false,'1.1','all');
 	    
-	    add_meta_box( 'af-1', "Annotation-fields", 'display_callback', 'post' );
+	    add_meta_box( 'af-1', "annotation_fields", 'display_callback', 'post' );
 	}
 
 	add_action( 'add_meta_boxes', 'register_meta_boxes' );
@@ -51,6 +51,52 @@
 	        delete_post_meta($id, $meta_key);
 	        add_post_meta($id, $meta_key, $meta_value);
 	    }
+	}
+
+	function get_post_meta_fields( $object ) {
+		//get the id of the post object array
+		$post_id = $object['id'];
+
+		// get_post_meta return the post meta fields as an array with strings by default
+		// thats why it needs to be converted to correct datatype
+		$metaData = get_post_meta( $post_id  );
+
+		foreach ($metaData as $key  => $value) {
+			// covert singel number to float
+			if(is_numeric($value[0])){
+				$metaData[$key] = (float)$value[0];
+			}
+			// array with arrays
+			elseif ( is_array(json_decode($value[0])) ) {
+				$index = 0;
+				foreach ($value as $element) {
+					$metaData[$key][$index++] = json_decode($element);
+				}
+			}
+			//array with strings
+			elseif(sizeof($value) > 1){
+				$metaData[$key] = $value;
+			}
+			//array with boolean 
+			elseif ($value[0] === "true" || $value[0] === "false") {
+				$metaData[$key] = json_decode($value[0]);
+			}
+			// single strings
+			else{
+				$metaData[$key] = $value[0];
+			}
+		}
+
+		return $metaData;
+	}
+
+	function create_posts_meta_field() {
+		register_rest_field( 'post', 'post_meta_fields', array(
+			'get_callback' => 'get_post_meta_fields',
+			'schema' => null,
+			'show_in_rest' => true,
+			)
+		);
 	}
 
 	/**
@@ -94,9 +140,6 @@
 	        delete_post_meta($post_id, $meta_key);
 	    }
 
-	    // to show the fields params in JSON format so it can be exported
-	    register_meta( 'post', 'meta', ['show_in_rest' => true,]);
-
 	    foreach ( $meta_keys as $meta_key ) {
 	        // if $_POST contains $meta_key, the fileds are updated otherwise a new post was created
 	        // and then we do nothing more
@@ -131,4 +174,5 @@
 	}
 
 	add_action( 'save_post', 'save_meta_box' );
+	add_action( 'rest_api_init', 'create_posts_meta_field' );
 ?>
