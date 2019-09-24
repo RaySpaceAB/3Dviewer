@@ -15,7 +15,7 @@
 	    wp_enqueue_script( 'repeater', '/wp-content/plugins/annotation-fields/assets/js/script.js', array( 'jquery' ), 2019, true );
 	    wp_enqueue_style( 'css', '/wp-content/plugins/annotation-fields/style.css',false,'1.1','all');
 	    
-	    add_meta_box( 'af-1', "annotation_fields", 'display_callback', 'post' );
+	    add_meta_box( 'af-1', "GUI settings", 'display_callback', 'post' );
 	}
 
 	add_action( 'add_meta_boxes', 'register_meta_boxes' );
