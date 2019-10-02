@@ -5,7 +5,7 @@
 	 * Author: Ray Space AB
 	 * Version: 1.0
 	 * License: GPL2
-	*/
+	 */
 
 	/**
 	 * Register meta boxes.
@@ -29,33 +29,31 @@
 	    include plugin_dir_path( __FILE__ ) . './form.php';
 	}
 
-	function debug_to_console( $data ) {
-	    $output = $data;
-	    if ( is_array( $output ) )
-	        $output = implode( ',', $output);
-
-	    echo "<script>console.log( 'Debug Objects: " . $output . "' );</script>";
+    /**
+	 * Register the fileds to the posts json-endpoint: http://localhost/3dviewer/wp-json/wp/v2/posts
+	 */
+	function create_posts_meta_field() {
+		register_rest_field( 'post', 'post_meta_fields', array(
+			'get_callback' => 'get_post_meta_fields_callback',
+			'schema' => null,
+			'show_in_rest' => true,
+			)
+		);
 	}
 
-	function update_global_fields($post_id, $meta_key, $meta_value){
-	    $latest = new WP_Query( array (
-	        'orderby'   => 'rand',
-	        'fields' => 'ids'
-	    ));
+	add_action( 'rest_api_init', 'create_posts_meta_field' );
 
-	    //echo("<script>console.log('PHP: ');</script>");                 
-	    add_post_meta($post_id, $meta_key, $meta_value);
-
-	    // update all posts
-	    foreach ($latest->posts as $id) {
-	        delete_post_meta($id, $meta_key);
-	        add_post_meta($id, $meta_key, $meta_value);
-	    }
-	}
-
-	function get_post_meta_fields( $object ) {
+	/**
+	 * Gets the values of the fields as an array of strings 
+	 * and convert it to the correct datatype
+	 *
+	 * @param WP_Post $post Current post object.
+	 *
+	 * @return Array $metaData Array of meta fields
+	 */
+	function get_post_meta_fields_callback( $post ) {
 		//get the id of the post object array
-		$post_id = $object['id'];
+		$post_id = $post['id'];
 
 		// get_post_meta return the post meta fields as an array with strings by default
 		// thats why it needs to be converted to correct datatype
@@ -78,7 +76,7 @@
 				$metaData[$key] = $value;
 			}
 			//array with boolean 
-			elseif ($value[0] === "true" || $value[0] === "false") {
+			elseif ($value[0] === 'true' || $value[0] === 'false') {
 				$metaData[$key] = json_decode($value[0]);
 			}
 			// single strings
@@ -90,17 +88,8 @@
 		return $metaData;
 	}
 
-	function create_posts_meta_field() {
-		register_rest_field( 'post', 'post_meta_fields', array(
-			'get_callback' => 'get_post_meta_fields',
-			'schema' => null,
-			'show_in_rest' => true,
-			)
-		);
-	}
-
 	/**
-	 * Save meta box content.
+	 * Save meta box content after the update button is clicked.
 	 *
 	 * @param int $post_id Post ID
 	 */
@@ -174,5 +163,26 @@
 	}
 
 	add_action( 'save_post', 'save_meta_box' );
-	add_action( 'rest_api_init', 'create_posts_meta_field' );
+
+	/**
+	 * Update fields for GUI settings
+	 *
+	 * @param int $post_id Current post id.
+	 * @param string $meta_key The name of the input field.
+	 * @param string $meta_value The value of the input field.
+	 */
+	function update_global_fields($post_id, $meta_key, $meta_value){
+	    $latest = new WP_Query( array (
+	        'orderby'   => 'rand',
+	        'fields' => 'ids'
+	    ));
+
+	    add_post_meta($post_id, $meta_key, $meta_value);
+
+	    // update all posts
+	    foreach ($latest->posts as $id) {
+	        delete_post_meta($id, $meta_key);
+	        add_post_meta($id, $meta_key, $meta_value);
+	    }
+	}
 ?>
