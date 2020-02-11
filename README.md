@@ -7,7 +7,7 @@ This wordpress theme is written in AngularJS to visualize 3D-models from Sketchf
 ## Run from localhost
 1. Start Apache and mySQL server with XAMPP or any server application.
 2. Log in to `http:/localhost/phpmyadmin` and create a new database with name `3dviewer`.
-3. Download the lates worpress version from [Wordpress.com](https://wordpress.org/download/). Unzip and copy the wordpress folder to `C:\xampp\htdocs`.
+3. Download the lates worpress version from [Wordpress.com](https://wordpress.org/download/). Unzip it, rename the folder to `3dviewer`, copy and paste it to `C:\xampp\htdocs`.
 4. Type `localhost/3dviewer` in you browser and configure the wordpress settings, choose 3dviewer as database as you newly created.
 5. Copy the content in `themes`, `plugins` and `uploads` to the corresponding folders in `wordpress/wp-content/`.
 6. Navigate to `wp-content/themes/3Dviewer` from cmd and run `npm install` to install node modules.
