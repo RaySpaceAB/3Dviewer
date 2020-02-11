@@ -7,15 +7,13 @@ This wordpress theme is written in AngularJS to visualize 3D-models from Sketchf
 ## Run from localhost
 1. Start Apache and mySQL server with XAMPP or any server application.
 2. Log in to `http:/localhost/phpmyadmin` and create a new database with name `3dviewer`.
-3. Download the lates worpress version from [Wordpress.com](https://wordpress.org/download/). Unzip it, rename the folder to `3dviewer`, copy and paste it to `C:\xampp\htdocs`.
-4. Type `localhost/3dviewer` in you browser and configure the wordpress settings, choose 3dviewer as database as you newly created.
-*Note, default database (phpMyadmin) username is: root, and you can leave the password blank*
-5. 
-5. Clone the github repository and copy the content in `themes`, `plugins` and `uploads` and paste it in the corresponding folders in `3dviewer/wp-content/`.
-6. Navigate to `wp-content/themes/3Dviewer` from cmd and run `npm install` to install node modules.
-7. Import the test_data.xml from wordpress via tools>import>run importer>select file and submit.
-7. Open the first post and hit the update buttom in the right corner.
-9. Refresh the webpage `localhost/3dviewer` and the 3dviewer-app will start running.
+3. Download the lates worpress version from [Wordpress.com](https://wordpress.org/download/). Unzip it, copy and paste the worpress folder into to `C:\xampp\htdocs`.
+4. Type `localhost/wordpress` in you browser and configure the wordpress settings, type: `3dviewer` as database name, `root` as username, leave the password blank, leave Database Host and Table Prefix as it is.
+5. Clone the github repository and copy the content in `themes`, `plugins` and `uploads` and paste it in the corresponding folders in `wordpress/wp-content/`.
+6. Navigate to `wordpress/wp-content/themes/3Dviewer` via your cmd and run `npm install` to install node modules. If you hasn't `Node.js` installed on your computer downloade the latest version from https://nodejs.org/en/download/ and install it before you run `npm install`.
+7. Type `localhost/wordpress` in you browser. Go to the Plugins tab in the menu and activate `Annotation fields` and `Wordpress Importer`. 8. Go to the Tools tab and then import>(Wordpress) run importer>select file. Selcet `test_data.xml` from the cloned repository and hit submit.
+8. Open the first post and hit the update buttom in the right corner.
+9. Refresh the webpage `localhost/wordpress` and the 3dviewer-app will start running.
 
 ## Running end-to-end tests
 Run `protractor conf` from the test folder via [Protractor](http://www.protractortest.org/).
