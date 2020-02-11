@@ -12,7 +12,7 @@ This wordpress theme is written in AngularJS to visualize 3D-models from Sketchf
 5. Clone the github repository and copy the content in `themes`, `plugins` and `uploads` and paste it in the corresponding folders in `wordpress/wp-content/`.
 6. Navigate to `wordpress/wp-content/themes/3Dviewer` via your cmd and run `npm install` to install node modules. If you hasn't `Node.js` installed on your computer downloade the latest version from https://nodejs.org/en/download/ and install it before you run `npm install`.
 7. Type `localhost/wordpress` in you browser. Go to the Plugins tab in the menu and activate `Annotation fields` and `Wordpress Importer`. 8. Go to the Tools tab and then import>(Wordpress) run importer>select file. Selcet `test_data.xml` from the cloned repository and hit submit.
-9.Go to the Appearance tab and activate the 3Dviewer theme. If message `The parent theme is missing. Please install the "twentyfifteen" parent theme` shows upp, just install that theme.
+9.Go to the Appearance tab and activate the 3Dviewer theme.
 10. Open the first post and hit the update buttom in the right corner.
 11. Refresh the webpage `localhost/wordpress` and the 3dviewer-app will start running.
 
