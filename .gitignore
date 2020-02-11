@@ -8,7 +8,6 @@ wp-content/themes/3Dviewer/node_modules/
 
 
 .htaccess
-index.php
 license.txt
 package-lock.json
 readme.html
