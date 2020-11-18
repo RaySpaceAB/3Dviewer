@@ -2,15 +2,14 @@
 // TYPE: Annotation Repeater
 //----------------------------------------
 
-jQuery(document).ready(function(){
-
+jQuery(document).ready(function($){
 
 	Sortable.create(simpleList, {
         handle: ".handle",
         animation: 100 
     });
 
-	var showRemovButton = function() {
+	var showRemoveButton = function() {
 		var removeRow = $( '.list-group .remove-row' );
 		if ( $( '.list-group-item' ).length == 1 ) {
 			removeRow.hide();
@@ -19,14 +18,10 @@ jQuery(document).ready(function(){
 		}
 	};
 
-	showRemovButton();
+	showRemoveButton();
 
 	$( '.add-row' ).click( function() {
-
 		var clone = $( '.list-group-item:last' ).clone();
-		clone.find( 'input' ).val( '' );
-
-		console.log("log1: ");
 		
 		clone.find('input' )[0].value = 0;
 		clone.find('input' )[1].value = 0;
@@ -51,20 +46,17 @@ jQuery(document).ready(function(){
 			return name.replace( /\d+/g, newIndex );
 		} );
 
-		showRemovButton();
+		showRemoveButton();
 		return false;
 	} );
 
 	$( document ).on( 'click', '.remove-row', function() {
 		// .on because we have multiple .remove-row classes
-
 		$( this ).closest( '.list-group-item' ).remove();
 		
-		showRemovButton();
+		showRemoveButton();
 		return false;
 	} );
-
-
 });
 
 
