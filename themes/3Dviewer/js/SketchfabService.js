@@ -84,24 +84,11 @@ function factoryFunction(){
                 orbit_zoom_factor: this.orbitZoomFactor,
                 camera: 0,
                 success: function onSuccess(api) {
-                    console.log("start");
-
-                    
+                    console.log("start", api);
 
                     api.setCameraEasing('easeOutQuad');
 
-                    for (var i = 0; i < 3; i++) {
-                        api.getLight(i,function(err, state){
-                            this.lightStates.push(state);
-                        }.bind(this));
-                    }
-
-                    api.getEnvironment(function(err, state){
-                        this.lightStates.push(state);
-                    }.bind(this));
-
                     api.addEventListener('viewerready', function() {
-
                         this.api = api;
 
                         api.setTextureQuality('ld', function(){
@@ -111,9 +98,32 @@ function factoryFunction(){
                         this._setCamera();
                         this._onTick();
                         
-                        console.log('viewerready');
-                        this.viewerready = true;
+                        console.log('viewerready...');
 
+						for (var i = 0; i < 3; i++) {
+							api.getLight(i,function(err, state){
+								if(!err){
+									this.lightStates.push(state);
+								}
+								else{
+									console.log("Error: ", err)
+									this.lightStates.push([0,0,0]);
+								}
+								
+							}.bind(this));
+						}
+	
+						api.getEnvironment(function(err, state){
+							if(!err){
+								this.lightStates.push(state);
+							}
+							else{
+								console.log("Error: ", err)
+								this.lightStates.push([0,0,0]);
+							}
+						}.bind(this));
+
+                        this.viewerready = true;
                     }.bind(this));             
 
                     api.addEventListener( 'camerastart', function() {
