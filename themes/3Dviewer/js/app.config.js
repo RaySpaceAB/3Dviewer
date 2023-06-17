@@ -9,5 +9,4 @@ angular.module('3DViewer').config(function($routeProvider, $locationProvider) {
     });
 
     $locationProvider.html5Mode(true);
-
 });
